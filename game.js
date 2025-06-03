@@ -1,17 +1,6 @@
-const starters = [
-  "bulbasaur", "charmander", "squirtle",
-  "chikorita", "cyndaquil", "totodile",
-  "treecko", "torchic", "mudkip",
-  "turtwig", "chimchar", "piplup",
-  "snivy", "tepig", "oshawott",
-  "chespin", "fennekin", "froakie",
-  "rowlet", "litten", "popplio",
-  "grookey", "scorbunny", "sobble"
-];
-
 // Get 3 unique random starters
 const getThreeStarters = () => {
-  const pool = [...starters];
+  const pool = [...starterPool];
   const chosen = [];
   while (chosen.length < 3) {
     const index = Math.floor(Math.random() * pool.length);
@@ -42,13 +31,27 @@ const showStarterChoices = async () => {
   }
 };
 
-const selectStarter = (name, sprite) => {
+const selectStarter = async (name, sprite) => {
   document.getElementById("starter-selection").style.display = "none";
   document.getElementById("game-start").style.display = "block";
   document.getElementById("chosen-name").textContent = name.toUpperCase();
   document.getElementById("chosen-sprite").src = sprite;
 
-  //TODO: Store chosen Pokémon and begin game logic
+  const enemyName = earlyEnemies[Math.floor(Math.random() * earlyEnemies.length)];
+  const enemyRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${enemyName}`);
+  const enemyData = await enemyRes.json();
+  const enemySprite = enemyData.sprites.front_default;
+
+  // Create enemy display
+  const gameStart = document.getElementById("game-start");
+  const enemyDiv = document.createElement("div");
+  enemyDiv.innerHTML = `
+    <h2>Enemy Appears: ${enemyName.toUpperCase()}</h2>
+    <img src="${enemySprite}" alt="${enemyName}">
+  `;
+  gameStart.appendChild(enemyDiv);
+
+  // TODO: Add HP and Battle Buttons
 };
 
 showStarterChoices();
