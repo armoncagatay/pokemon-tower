@@ -88,14 +88,14 @@ const selectStarter = async (name, data) => {
 
   // Display player info
   document.getElementById("player-stats").innerHTML = `
-  <strong>Level:</strong> ${starterPokemon.level}<br>
-  <strong>IVs:</strong><br>
-  HP: ${starterPokemon.ivs.hp}<br>
-  ATK: ${starterPokemon.ivs.attack}<br>
-  DEF: ${starterPokemon.ivs.defense}<br>
-  SpA: ${starterPokemon.ivs["special-attack"]}<br>
-  SpD: ${starterPokemon.ivs["special-defense"]}<br>
-  SPD: ${starterPokemon.ivs.speed}
+    <strong>Level:</strong> ${starterPokemon.level}<br>
+    <strong>IVs:</strong><br>
+    HP: ${starterPokemon.ivs.hp} (Stat: ${starterPokemon.stats.hp})<br>
+    ATK: ${starterPokemon.ivs.attack} (Stat: ${starterPokemon.stats.attack})<br>
+    DEF: ${starterPokemon.ivs.defense} (Stat: ${starterPokemon.stats.defense})<br>
+    SpA: ${starterPokemon.ivs["special-attack"]} (Stat: ${starterPokemon.stats["special-attack"]})<br>
+    SpD: ${starterPokemon.ivs["special-defense"]} (Stat: ${starterPokemon.stats["special-defense"]})<br>
+    SPD: ${starterPokemon.ivs.speed} (Stat: ${starterPokemon.stats.speed})
   `;
   document.getElementById("chosen-name").textContent = starterPokemon.name.toUpperCase();
   document.getElementById("chosen-sprite").src = starterPokemon.sprite;
@@ -111,14 +111,14 @@ const selectStarter = async (name, data) => {
 
   // Display enemy info
   document.getElementById("enemy-stats").innerHTML = `
-  <strong>Level:</strong> ${enemyPokemon.level}<br>
-  <strong>IVs:</strong><br>
-  HP: ${enemyPokemon.ivs.hp}<br>
-  ATK: ${enemyPokemon.ivs.attack}<br>
-  DEF: ${enemyPokemon.ivs.defense}<br>
-  SpA: ${enemyPokemon.ivs["special-attack"]}<br>
-  SpD: ${enemyPokemon.ivs["special-defense"]}<br>
-  SPD: ${enemyPokemon.ivs.speed}
+    <strong>Level:</strong> ${enemyPokemon.level}<br>
+    <strong>IVs:</strong><br>
+    HP: ${enemyPokemon.ivs.hp} (Stat: ${enemyPokemon.stats.hp})<br>
+    ATK: ${enemyPokemon.ivs.attack} (Stat: ${enemyPokemon.stats.attack})<br>
+    DEF: ${enemyPokemon.ivs.defense} (Stat: ${enemyPokemon.stats.defense})<br>
+    SpA: ${enemyPokemon.ivs["special-attack"]} (Stat: ${enemyPokemon.stats["special-attack"]})<br>
+    SpD: ${enemyPokemon.ivs["special-defense"]} (Stat: ${enemyPokemon.stats["special-defense"]})<br>
+    SPD: ${enemyPokemon.ivs.speed} (Stat: ${enemyPokemon.stats.speed})
   `;
   document.getElementById("enemy-name").textContent = enemyPokemon.name.toUpperCase();
   document.getElementById("enemy-sprite").src = enemyPokemon.sprite;
@@ -129,3 +129,60 @@ const selectStarter = async (name, data) => {
 // === Init ===
 
 showStarterChoices();
+
+function playerAttack() {
+  const log = document.getElementById("battle-log");
+
+  // Calculate player damage to enemy
+  const playerAttack = starterPokemon.stats.attack;
+  const enemyDefense = enemyPokemon.stats.defense;
+  const damageToEnemy = Math.max(1, playerAttack - Math.floor(enemyDefense / 2));
+
+  enemyPokemon.currentHP -= damageToEnemy;
+  if (enemyPokemon.currentHP < 0) enemyPokemon.currentHP = 0;
+
+  updateHPBar("enemy-hp-bar", "enemy-hp-text", enemyPokemon);
+
+  log.innerText = `${starterPokemon.name.toUpperCase()} used Attack! It dealt ${damageToEnemy} damage.`;
+
+  // Check if enemy fainted
+  if (enemyPokemon.currentHP === 0) {
+    log.innerText += `\n${enemyPokemon.name.toUpperCase()} fainted! You win! 🎉`;
+    disableBattle();
+    return;
+  }
+
+  // Wait, then let enemy counterattack
+  setTimeout(enemyAttack, 1000);
+}
+
+function enemyAttack() {
+  const log = document.getElementById("battle-log");
+
+  const enemyAttack = enemyPokemon.stats.attack;
+  const playerDefense = starterPokemon.stats.defense;
+  const damageToPlayer = Math.max(1, enemyAttack - Math.floor(playerDefense / 2));
+
+  starterPokemon.currentHP -= damageToPlayer;
+  if (starterPokemon.currentHP < 0) starterPokemon.currentHP = 0;
+
+  updateHPBar("player-hp-bar", "player-hp-text", starterPokemon);
+
+  log.innerText += `\n${enemyPokemon.name.toUpperCase()} counterattacked and dealt ${damageToPlayer} damage!`;
+
+  // Check if player fainted
+  if (starterPokemon.currentHP === 0) {
+    log.innerText += `\n${starterPokemon.name.toUpperCase()} fainted! You lose. 💀`;
+    disableBattle();
+  }
+}
+
+function updateHPBar(barId, textId, pokemon) {
+  const percent = Math.floor((pokemon.currentHP / pokemon.maxHP) * 100);
+  document.getElementById(barId).style.width = `${percent}%`;
+  document.getElementById(textId).textContent = `${pokemon.currentHP}/${pokemon.maxHP} HP`;
+}
+
+function disableBattle() {
+  document.querySelector("#battle-controls button").disabled = true;
+}
