@@ -4,3 +4,32 @@ body {
   background-color: #f2f2f2;
   padding: 20px;
 }
+
+.hp-container {
+  width: 150px;
+  height: 16px;
+  background-color: #ccc;
+  margin: 5px auto;
+  border: 1px solid #333;
+  border-radius: 4px;
+  position: relative;
+}
+
+.hp-bar {
+  height: 100%;
+  background-color: #4CAF50;
+  width: 100%;
+  transition: width 0.3s ease;
+}
+
+.stats-box {
+  font-size: 14px;
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin: 10px auto;
+  width: 180px;
+  border-radius: 6px;
+  text-align: left;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
