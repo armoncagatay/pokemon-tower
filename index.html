@@ -1,44 +1,78 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Pokémon Tower Game</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokémon Tower Battle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
     <h1>Pokémon Tower Battle</h1>
-    <div id="pokemon-info"></div>
+    
+    <!-- Starter Selection Screen -->
     <div id="starter-selection">
       <h2>Choose Your Starter Pokémon</h2>
-        <div id="starter-options"></div>
+      <div id="starter-options" class="pokemon-selection">
+        <div class="loader"></div>
+      </div>
     </div>
-    <div id="game-start" style="display:none;">
-      <h2 id="chosen-name"></h2>
-      <img id="chosen-sprite" />
-      <div id="player-battle">
-        <h2 id="chosen-name"></h2>
-        <img id="chosen-sprite" />
-        <div class="hp-container">
-          <div class="hp-bar" id="player-hp-bar"></div>
-        </div>
-        <p id="player-hp-text"></p>
-        <div id="player-stats" class="stats-box"></div>
+    
+    <!-- Tower Progress -->
+    <div id="tower-progress" class="hidden">
+      <div class="tower-info">
+        <div class="floor-indicator">Floor: <span id="current-floor">1</span></div>
+        <div class="player-info">Pokémon: <span id="player-pokemon-name"></span> (Lv. <span id="player-level"></span>)</div>
       </div>
-      <div id="enemy-battle">
-        <h2 id="enemy-name"></h2>
-        <img id="enemy-sprite" />
-        <div class="hp-container">
-          <div class="hp-bar" id="enemy-hp-bar"></div>
-        </div>
-        <p id="enemy-hp-text"></p>
-        <div id="enemy-stats" class="stats-box"></div>
+      <div class="controls">
+        <button id="next-battle-btn" class="btn">Challenge Next Floor</button>
       </div>
-      <div id="battle-controls" style="margin-top: 20px;">
-        <button onclick="playerAttack()">Attack</button>
-      </div>
-      <p id="battle-log"></p>
     </div>
-    <script src="pokemon-data.js"></script>
-    <script src="game.js"></script>
-  </body>
+    
+    <!-- Battle Screen -->
+    <div id="battle-screen" class="hidden">
+      <div class="battle-area">
+        <div id="enemy-battle" class="pokemon-battle">
+          <h3 id="enemy-name" class="name"></h3>
+          <p>Lv. <span id="enemy-level"></span></p>
+          <img id="enemy-sprite" class="pokemon-sprite" src="" alt="Enemy Pokémon">
+          <div class="hp-container">
+            <div id="enemy-hp-bar" class="hp-bar"></div>
+          </div>
+          <p id="enemy-hp-text"></p>
+          <div id="enemy-stats" class="stats-info"></div>
+        </div>
+        
+        <div id="player-battle" class="pokemon-battle">
+          <h3 id="player-name" class="name"></h3>
+          <p>Lv. <span id="player-level-battle"></span></p>
+          <img id="player-sprite" class="pokemon-sprite" src="" alt="Your Pokémon">
+          <div class="hp-container">
+            <div id="player-hp-bar" class="hp-bar"></div>
+          </div>
+          <p id="player-hp-text"></p>
+          <div id="player-stats" class="stats-info"></div>
+        </div>
+      </div>
+      
+      <div id="battle-log"></div>
+      
+      <div id="moves-container" class="moves-container">
+        <!-- Move buttons will be added dynamically -->
+      </div>
+    </div>
+    
+    <!-- Game Over Screen -->
+    <div id="game-over" class="hidden">
+      <h2 id="game-result"></h2>
+      <p id="game-stats"></p>
+      <div class="controls">
+        <button id="restart-btn" class="btn">Start New Game</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Files -->
+  <script src="game.js" defer></script>
+</body>
 </html>
